@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAMA - Teams</title>
+    <title>PAMA - Our Team</title>
     
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,17 +17,16 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Ensures strict 1-page no-scroll layout */
             height: 100vh;
             width: 100vw;
-            overflow: hidden;
-            background-color: #050814; /* Deep space fallback color */
+            overflow: hidden; /* Lock the body so the background doesn't move */
+            background-color: #050814; 
             color: white;
             margin: 0;
             padding: 0;
         }
 
-        /* Space Background using an external high-res image with an overlay */
+        /* Space Background matching index.html */
         .space-bg {
             position: absolute;
             top: 0;
@@ -36,62 +34,57 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
+                linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%),
                 url('Images/space_background.jpg');
             background-size: cover;
             background-position: center;
             z-index: -1;
         }
 
-        /* CSS Filter to make the provided black logo white to contrast against space background */
-        .logo-invert {
-            filter: brightness(0) invert(1);
-            /* Smooth scaling */
-            transition: transform 0.3s ease;
+        /* Scrollbar styling for the main container */
+        .scrollable-main::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-main::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2); 
+        }
+        .scrollable-main::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2); 
+            border-radius: 10px;
+        }
+        .scrollable-main::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4); 
         }
 
-        /* Custom utilities for the layout aesthetics */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-link {
-            transition: opacity 0.2s ease;
-        }
-        .nav-link:hover {
-            opacity: 0.7;
-        }
-
-        .dropdown-content {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+        /* Dark space-themed card matching the image reference */
+        .team-card {
+            background-color: #ebebec, 0.05;
+            
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        .menu-active .dropdown-content {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
+        /* Interactive pop-up hover effect - Updated to White */
+        .team-card:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+            transform: translateY(-8px);
         }
-
-        /* Initial drop-down state of the particles */
+        
+       /* Initial drop-down state of the particles */
         .particle-item {
             transform: translateY(-15px);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         
-        /* Staggered dropping effect when MENU is clicked and active */
-        .menu-active .particle-item {
+        /* Staggered dropping effect when MENU is hovered */
+        .group:hover .particle-item {
             transform: translateY(0);
             opacity: 1;
         }
-        .menu-active .particle-item:nth-child(1) { transition-delay: 0.05s; }
-        .menu-active .particle-item:nth-child(2) { transition-delay: 0.1s; }
+        .group:hover .particle-item:nth-child(1) { transition-delay: 0.05s; }
+        .group:hover .particle-item:nth-child(2) { transition-delay: 0.1s; }
 
         /* The dot itself */
         .particle-dot {
@@ -104,10 +97,6 @@
             flex-shrink: 0;
         }
 
-        .particle-item:hover {
-            opacity: 0.8;
-        }
-
         /* The hidden text that acts like a Manim drawing */
         .particle-text {
             display: inline-block;
@@ -118,32 +107,32 @@
             /* Snappy ease-out curve mimicking Manim's math reveals */
             transition: max-width 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
                         opacity 0.4s ease,
-                        transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
-                        color 0.2s ease;
+                        transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
             transform: translateX(10px);
             transform-origin: right center;
         }
 
         /* INSTANT MANIM ANIMATION: Text reveals itself automatically after dropping */
-        .menu-active .particle-item:nth-child(1) .particle-text { transition-delay: 0.15s; }
-        .menu-active .particle-item:nth-child(2) .particle-text { transition-delay: 0.25s; }
+        .group:hover .particle-item:nth-child(1) .particle-text { transition-delay: 0.15s; }
+        .group:hover .particle-item:nth-child(2) .particle-text { transition-delay: 0.25s; }
 
-        .menu-active .particle-text {
+        .group:hover .particle-text {
             max-width: 120px; /* Expands to reveal the word */
             opacity: 1;
             transform: translateX(0);
         }
         
-        /* The dot intensifies when hovered */
+        /* The dot dims when hovered */
         .particle-item:hover .particle-dot {
-            transform: scale(1.5);
-            box-shadow: 0 0 16px 4px rgba(255, 255, 255, 1);
+            transform: scale(0.6);
+            box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.4);
+            opacity: 0.5;
         }
 
-        /* Text color softens on hover to indicate it's a clickable link */
-        .particle-item:hover .particle-text {
-            color: #d1d5db;
-            opacity: 1;
+        /* Text gets an animated glow and slight shift when hovered */
+        .group:hover .particle-item:hover .particle-text {
+            color: #ffffff;
+            transform: translateX(-6px);
         }
     </style>
 </head>
@@ -151,19 +140,16 @@
 
     <div class="space-bg"></div>
 
-    <header class="w-full flex justify-between items-center p-6 md:p-10 z-10">
-        
+    <header class="w-full flex justify-between items-center p-6 md:p-10 relative z-50 shrink-0">
         <!-- Top Left: Social Media Icons -->
         <div class="flex items-center gap-6 text-sm text-gray-300">
-            <a href="#" class="nav-link"><i class="fab fa-instagram text-lg"></i></a>
-            <a href="#" class="nav-link"><i class="fab fa-facebook-f text-lg"></i></a>
-            <a href="#" class="nav-link"><i class="far fa-envelope text-lg"></i></a>
+            <a href="https://www.instagram.com/uleth.pama/?hl=en" class="hover:text-white transition-colors duration-200"><i class="fab fa-instagram text-lg"></i></a>
+            <a href="#" class="hover:text-white transition-colors duration-200"><i class="far fa-envelope text-lg"></i></a>
         </div>
 
         <!-- Top Center: Join Now Icon/Button -->
-        <!-- Replacing the original "Book Now" or logo overlay with a prominent join button -->
         <div class="absolute left-1/2 transform -translate-x-1/2">
-            <a href="#" class="nav-link flex items-center justify-center border border-white/30 rounded-full px-6 py-2 text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjsnHnHnEASkb9UESTRAUj_tec0Mdjt4p_MMNZUCRRq6XK8A/viewform?usp=header" class="flex items-center justify-center border border-white/30 rounded-full px-6 py-2 text-[10px] md:text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300">
                 Join Now
             </a>
         </div>
@@ -176,106 +162,185 @@
                 <a href="#" class="nav-link">FR</a>
             </div>
             
-            <div id="menu-container" class="relative">
-                <!-- Added onclick event to trigger JavaScript toggle -->
-                <button onclick="toggleMenu(event)" class="nav-link flex items-center gap-3 py-2 cursor-pointer">
+            <!-- Replaced JS toggle with Tailwind 'group' hover similar to your AADI website -->
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-3 py-2 cursor-pointer border border-transparent rounded-sm hover:text-white transition-all duration-300">
                     MENU
                     <i class="fas fa-bars text-lg"></i>
                 </button>
                 
-                <!-- Removed group-hover classes, using dropdown-content controlled by JS -->
-                <div class="dropdown-content absolute right-0 top-full pt-4 pb-6 pl-20 pr-2 flex flex-col items-end gap-6 z-50">
+                <!-- Invisible hit-box padding (pt-4 pb-6 pl-24) ensures mouse doesn't slip off -->
+                <div class="absolute right-0 top-full pt-4 pb-6 pl-24 pr-2 flex flex-col items-end gap-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                     
                     <!-- Particle 1 -->
-                    <a href="Team.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full ">
-                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">TEAM</span>
+                    <a href="index.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full">
+                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">Home</span>
                         <span class="particle-dot"></span>
                     </a>
 
                     <!-- Particle 2 -->
-                    <a href="Events.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full">
-                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">EVENTS</span>
+                    <a href="Team.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full">
+                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">Team</span>
                         <span class="particle-dot"></span>
                     </a>
+
+                    <!-- Particle 3 -->
+                    <a href="Events.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full">
+                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">Events</span>
+                        <span class="particle-dot"></span>
+                    </a>
+                    
 
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow flex flex-col items-center justify-center z-10 px-4 -mt-10">
+    <main class="scrollable-main flex-grow overflow-y-auto z-10 px-6 md:px-16 pb-20">
         
-        <!-- PAMA Logo -->
-        <!-- Using the requested local file name, applying inversion so it's visible on dark background -->
-        <img 
-            src="Images/Final_PAMA_Logo.png" 
-            alt="PAMA Logo" 
-            class="logo-invert w-[70vw] max-w-[800px] object-contain mb-6"
-        >
-        
-        <!-- Full Name Subtitle -->
-        <h1 class="text-center text-xs md:text-sm uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-300 font-light max-w-4xl px-4">
-            Physics, Astronomy, & Mathematics Association
-        </h1>
-    </main>
+        <div class="text-center mb-12 mt-6">
+            <h1 class="text-2xl md:text-4xl font-light uppercase tracking-[0.3em] text-white mb-2">Executive Team</h1>
+            <p class="text-xs md:text-sm text-gray-400 font-light tracking-[0.1em] uppercase">2026 - 2027 Academic Year</p>
+        </div>
 
-    <footer class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 p-6 md:p-10 z-10 items-end">
-        
-        <!-- Column 1: Image Card replacing the plane card -->
-        <div class="glass-card flex items-stretch rounded-xl overflow-hidden h-[120px] max-w-sm">
-            <!-- Thumbnail Image -->
-            <div class="w-2/5 h-full relative">
-                <img 
-                    src="image_208297.jpg" 
-                    alt="PAMA Event" 
-                    class="w-full h-full object-cover"
-                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?q=80&w=400&auto=format&fit=crop';"
-                >
-            </div>
-            <!-- Card Text Content -->
-            <div class="w-3/5 p-4 flex flex-col justify-between">
-                <p class="text-[10px] md:text-xs text-gray-200 leading-snug font-medium">
-                    Cosmic Cinema is back. Join us under the stars...
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            
+            <!-- President -->
+            <div class="team-card rounded-2xl p-8 flex flex-col items-center text-center">
+                <!-- Circular Icon Matching Reference -->
+                <div class="w-24 h-24 rounded-full border-[2px] border-white-400 flex items-center justify-center mb-5 bg-transparent">
+                    <i class="far fa-user text-3xl text-gray-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white mb-1">Aadi D. Patel</h2>
+                <p class="text-sm font-semibold text-cyan-400 mb-1">President</p>
+                <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-5">[Physics Major / Year 5]</p>
+                <p class="text-xs text-gray-400 leading-relaxed font-light">
+                    Oversees all club operations, chairs executive and general meetings, and acts as the primary liaison between the club, the ULSU, and faculty. Holds one of the two mandatory signing authorities for the club's finances.
                 </p>
-                <a href="#" class="text-[10px] md:text-xs font-semibold hover:text-gray-300 transition-colors flex items-center gap-2 uppercase tracking-wide">
-                    News overview <i class="fas fa-arrow-right"></i>
-                </a>
+            </div>
+
+            <!-- Vice President -->
+            <div class="team-card rounded-2xl p-8 flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full border-[2px] border-white-400 flex items-center justify-center mb-5 bg-transparent">
+                    <i class="far fa-user text-3xl text-gray-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white mb-1">Oluyemi Newkirk</h2>
+                <p class="text-sm font-semibold text-cyan-400 mb-1">Vice President</p>
+                <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-5">[Physics Major / Year 5]</p>
+                <p class="text-xs text-gray-400 leading-relaxed font-light">
+                    Supports the President in their duties and manages internal club affairs. Fills in for the President when absent and helps coordinate multi-disciplinary initiatives across Physics, Astronomy, and Mathematics.
+                </p>
+            </div>
+
+            <!-- Treasurer -->
+            <div class="team-card rounded-2xl p-8 flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full border-[2px] border-white-400 flex items-center justify-center mb-5 bg-transparent">
+                    <i class="far fa-user text-3xl text-gray-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white mb-1">Neil Arya</h2>
+                <p class="text-sm font-semibold text-cyan-400 mb-1">Treasurer</p>
+                <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-5">[Physics Major / Year 3]</p>
+                <p class="text-xs text-gray-400 leading-relaxed font-light">
+                    Manages the club's bank account, applies for and secures club funding or start-up grants, and maintains transparent financial records. Holds the second mandatory signing authority for the club's finances.
+                </p>
+            </div>
+
+            <!-- Co-Logistics Director 1 -->
+            <div class="team-card rounded-2xl p-8 flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full border-[2px] border-white-400 flex items-center justify-center mb-5 bg-transparent">
+                    <i class="far fa-user text-3xl text-gray-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white mb-1">Yana Fetisova</h2>
+                <p class="text-sm font-semibold text-cyan-400 mb-1">Co-Logistics Director</p>
+                <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-5">[Physics Major / Year 5]</p>
+                <p class="text-xs text-gray-400 leading-relaxed font-light">
+                    Handles the operational details of club events. Responsibilities include booking spaces and rooms, drafting event proposals if needed, and keeping minutes.
+                </p>
+            </div>
+
+            <!-- Co-Logistics Director 2 -->
+            <div class="team-card rounded-2xl p-8 flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full border-[2px] border-white-400 flex items-center justify-center mb-5 bg-transparent">
+                    <i class="far fa-user text-3xl text-gray-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white mb-1">Haifei Mo</h2>
+                <p class="text-sm font-semibold text-cyan-400 mb-1">Co-Logistics Director</p>
+                <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-5">[Geography Major / Year 1]</p>
+                <p class="text-xs text-gray-400 leading-relaxed font-light">
+                    Handles the operational details of club events. Responsibilities include booking spaces and rooms, drafting event proposals if needed, and keeping minutes.
+                </p>
+            </div>
+
+            <!-- Undergraduate Advisor -->
+            <div class="team-card rounded-2xl p-8 flex flex-col items-center text-center">
+                <div class="w-24 h-24 rounded-full border-[2px] border-white-400 flex items-center justify-center mb-5 bg-transparent">
+                    <i class="far fa-user text-3xl text-gray-500"></i>
+                </div>
+                <h2 class="text-lg font-bold text-white mb-1">Nicolas Benoit</h2>
+                <p class="text-sm font-semibold text-cyan-400 mb-1">Undergraduate Advisor</p>
+                <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-5">[Physics Major / Year 3]</p>
+                <p class="text-xs text-gray-400 leading-relaxed font-light">
+                    Represents the interests and concerns of undergraduate members on the executive committee. Assists the executive team with general operations and event execution.
+                </p>
             </div>
         </div>
 
-        <!-- Column 2: Mission Paragraph -->
-        <div class="hidden md:block text-xs text-gray-300 leading-relaxed font-light mb-2">
-            The Physics, Astronomy, & Mathematics Association (PAMA) is a non-profit student organization and modern successor to the historic Physics Club. We aim to equip students with the necessary skills and resources to succeed as future scientists.
+
+        <div class="max-w-4xl mx-auto mt-20 mb-10">
+            <!-- Decorative Divider -->
+            <div class="flex items-center justify-center gap-6 mb-8">
+                <div class="h-[1px] bg-white/10 flex-grow"></div>
+                <h2 class="text-lg md:text-xl font-light uppercase tracking-[0.2em] text-white">Graduate Advisory</h2>
+                <div class="h-[1px] bg-white/10 flex-grow"></div>
+            </div>
+
+            <div class="team-card group rounded-2xl p-8 md:p-12 flex flex-col items-center text-center gap-8">
+                
+                <!-- Row of Graduate Students -->
+                <div class="flex flex-wrap justify-center gap-8 md:gap-16 w-full mb-2">
+                    <!-- Grad 1 -->
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-20 h-20 rounded-full border-[2px] border-white-400 flex items-center justify-center bg-transparent transition-all duration-400 group-hover:border-white group-hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                            <i class="far fa-user text-2xl text-gray-500 group-hover:text-white transition-colors duration-400"></i>
+                        </div>
+                        <span class="text-white text-[11px] font-bold tracking-wider uppercase">Jared Sparkes</span>
+                    </div>
+                    
+                    <!-- Grad 2 -->
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-20 h-20 rounded-full border-[2px] border-white-400 flex items-center justify-center bg-transparent transition-all duration-400 group-hover:border-white group-hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                            <i class="far fa-user text-2xl text-gray-500 group-hover:text-white transition-colors duration-400"></i>
+                        </div>
+                        <span class="text-white text-[11px] font-bold tracking-wider uppercase">Nick Fortier</span>
+                    </div>
+
+                    <!-- Grad 3 -->
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-20 h-20 rounded-full border-[2px] border-white-400 flex items-center justify-center bg-transparent transition-all duration-400 group-hover:border-white group-hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                            <i class="far fa-user text-2xl text-gray-500 group-hover:text-white transition-colors duration-400"></i>
+                        </div>
+                        <span class="text-white text-[11px] font-bold tracking-wider uppercase">Will Wright</span>
+                    </div>
+
+                    <!-- Grad 4 -->
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-20 h-20 rounded-full border-[2px] border-white-400 flex items-center justify-center bg-transparent transition-all duration-400 group-hover:border-white group-hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                            <i class="far fa-user text-2xl text-gray-500 group-hover:text-white transition-colors duration-400"></i>
+                        </div>
+                        <span class="text-white text-[11px] font-bold tracking-wider uppercase">Seaking More</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center max-w-3xl">
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-2">MSc Candidates</h2>
+                    <p class="text-sm font-semibold text-cyan-400 mb-2">Graduate Advisory Board</p>
+                    <p class="text-[10px] text-yellow-500 uppercase tracking-widest mb-6">[Physics & Astronomy / Graduate Students]</p>
+                    <p class="text-xs md:text-sm text-white leading-relaxed font-light">
+                        Provides general academic guidance and assists the executive team with operational support during events. Our graduate advisors serve as a crucial bridge for undergraduates seeking mentorship, research opportunities, and advanced academic insight into the sciences.
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <!-- Column 3: Community Paragraph & Call to Action -->
-        <div class="hidden md:block text-xs text-gray-300 leading-relaxed font-light mb-2">
-            <p class="mb-4">
-                PAMA serves all full-time and part-time university students, faculty, staff, and local community members. We foster a safe, inclusive environment for students to learn and grow.
-            </p>
-            <a href="#" class="text-white font-semibold hover:text-gray-300 transition-colors flex items-center gap-2 uppercase tracking-wide">
-                Learn more about our club <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-
-    </footer>
-
-    <script>
-        function toggleMenu(event) {
-            // Prevent the click from immediately bubbling up to the window
-            event.stopPropagation();
-            const container = document.getElementById('menu-container');
-            container.classList.toggle('menu-active');
-        }
-
-        // Close the menu if the user clicks anywhere else on the screen
-        window.onclick = function(event) {
-            const container = document.getElementById('menu-container');
-            // Ensure clicking the links inside the menu doesn't instantly close it and kill the navigation
-            if (container && container.classList.contains('menu-active') && !container.contains(event.target)) {
-                container.classList.remove('menu-active');
-            }
-        }
-    </script>
 </body>
 </html>
