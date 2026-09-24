@@ -64,19 +64,6 @@
             opacity: 0.7;
         }
 
-        .dropdown-content {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        
-        .menu-active .dropdown-content {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-
         /* Initial drop-down state of the particles */
         .particle-item {
             transform: translateY(-15px);
@@ -84,13 +71,13 @@
             transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         
-        /* Staggered dropping effect when MENU is clicked and active */
-        .menu-active .particle-item {
+        /* Staggered dropping effect when MENU is hovered */
+        .group:hover .particle-item {
             transform: translateY(0);
             opacity: 1;
         }
-        .menu-active .particle-item:nth-child(1) { transition-delay: 0.05s; }
-        .menu-active .particle-item:nth-child(2) { transition-delay: 0.1s; }
+        .group:hover .particle-item:nth-child(1) { transition-delay: 0.05s; }
+        .group:hover .particle-item:nth-child(2) { transition-delay: 0.1s; }
 
         /* The dot itself */
         .particle-dot {
@@ -103,10 +90,6 @@
             flex-shrink: 0;
         }
 
-        .particle-item:hover {
-            opacity: 0.8;
-        }
-
         /* The hidden text that acts like a Manim drawing */
         .particle-text {
             display: inline-block;
@@ -117,32 +100,32 @@
             /* Snappy ease-out curve mimicking Manim's math reveals */
             transition: max-width 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
                         opacity 0.4s ease,
-                        transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
-                        color 0.2s ease;
+                        transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
             transform: translateX(10px);
             transform-origin: right center;
         }
 
         /* INSTANT MANIM ANIMATION: Text reveals itself automatically after dropping */
-        .menu-active .particle-item:nth-child(1) .particle-text { transition-delay: 0.15s; }
-        .menu-active .particle-item:nth-child(2) .particle-text { transition-delay: 0.25s; }
+        .group:hover .particle-item:nth-child(1) .particle-text { transition-delay: 0.15s; }
+        .group:hover .particle-item:nth-child(2) .particle-text { transition-delay: 0.25s; }
 
-        .menu-active .particle-text {
+        .group:hover .particle-text {
             max-width: 120px; /* Expands to reveal the word */
             opacity: 1;
             transform: translateX(0);
         }
         
-        /* The dot intensifies when hovered */
+        /* The dot dims when hovered */
         .particle-item:hover .particle-dot {
-            transform: scale(1.5);
-            box-shadow: 0 0 16px 4px rgba(255, 255, 255, 1);
+            transform: scale(0.6);
+            box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.4);
+            opacity: 0.5;
         }
 
-        /* Text color softens on hover to indicate it's a clickable link */
-        .particle-item:hover .particle-text {
-            color: #d1d5db;
-            opacity: 1;
+        /* Text gets an animated glow and slight shift when hovered */
+        .group:hover .particle-item:hover .particle-text {
+            color: #ffffff;
+            transform: translateX(-6px);
         }
     </style>
 </head>
@@ -150,7 +133,8 @@
 
     <div class="space-bg"></div>
 
-    <header class="w-full flex justify-between items-center p-6 md:p-10 z-10">
+    <!-- CRITICAL FIX: Added 'relative z-50' so the menu firmly sits above the main content layer -->
+    <header class="w-full flex justify-between items-center p-6 md:p-10 relative z-50">
         
         <!-- Top Left: Social Media Icons -->
         <div class="flex items-center gap-6 text-sm text-gray-300">
@@ -175,18 +159,18 @@
                 <a href="#" class="nav-link">FR</a>
             </div>
             
-            <div id="menu-container" class="relative">
-                <!-- Added onclick event to trigger JavaScript toggle -->
-                <button onclick="toggleMenu(event)" class="nav-link flex items-center gap-3 py-2 cursor-pointer">
+            <!-- Replaced JS toggle with Tailwind 'group' hover similar to your AADI website -->
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-3 py-2 cursor-pointer border border-transparent rounded-sm hover:text-white transition-all duration-300">
                     MENU
                     <i class="fas fa-bars text-lg"></i>
                 </button>
                 
-                <!-- Removed group-hover classes, using dropdown-content controlled by JS -->
-                <div class="dropdown-content absolute right-0 top-full pt-4 pb-6 pl-20 pr-2 flex flex-col items-end gap-6 z-50">
+                <!-- Invisible hit-box padding (pt-4 pb-6 pl-24) ensures mouse doesn't slip off -->
+                <div class="absolute right-0 top-full pt-4 pb-6 pl-24 pr-2 flex flex-col items-end gap-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                     
                     <!-- Particle 1 -->
-                    <a href="Team.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full ">
+                    <a href="Team.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full">
                         <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">TEAM</span>
                         <span class="particle-dot"></span>
                     </a>
@@ -259,22 +243,5 @@
 
     </footer>
 
-    <script>
-        function toggleMenu(event) {
-            // Prevent the click from immediately bubbling up to the window
-            event.stopPropagation();
-            const container = document.getElementById('menu-container');
-            container.classList.toggle('menu-active');
-        }
-
-        // Close the menu if the user clicks anywhere else on the screen
-        window.onclick = function(event) {
-            const container = document.getElementById('menu-container');
-            // Ensure clicking the links inside the menu doesn't instantly close it and kill the navigation
-            if (container && container.classList.contains('menu-active') && !container.contains(event.target)) {
-                container.classList.remove('menu-active');
-            }
-        }
-    </script>
 </body>
 </html>
