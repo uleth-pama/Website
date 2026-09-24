@@ -40,6 +40,32 @@
             background-size: cover;
             background-position: center;
             z-index: -1;
+            overflow: hidden; /* Contains the floating particles */
+        }
+
+        /* Floating Background Particles */
+        .floating-particle {
+            position: absolute;
+            bottom: -10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.3);
+            pointer-events: none; /* Prevents them from blocking clicks */
+            opacity: 0;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-105vh) scale(1.2);
+                opacity: 0;
+            }
         }
 
         /* CSS Filter to make the provided black logo white to contrast against space background */
@@ -139,11 +165,10 @@
         <!-- Top Left: Social Media Icons -->
         <div class="flex items-center gap-6 text-sm text-gray-300">
             <a href="https://www.instagram.com/uleth.pama/?hl=en" class="nav-link"><i class="fab fa-instagram text-lg"></i></a>
-            <a href="#" class="nav-link"><i class="far fa-envelope text-lg"></i> (Comming Soon) </a>
+            <a href="#" class="nav-link"><i class="far fa-envelope text-lg"></i> (Coming Soon) </a>
         </div>
 
         <!-- Top Center: Join Now Icon/Button -->
-        <!-- Replacing the original "Book Now" or logo overlay with a prominent join button -->
         <div class="absolute left-1/2 transform -translate-x-1/2">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjsnHnHnEASkb9UESTRAUj_tec0Mdjt4p_MMNZUCRRq6XK8A/viewform?usp=header" class="nav-link flex items-center justify-center border border-white/30 rounded-full px-6 py-2 text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300">
                 Join Now
@@ -186,7 +211,6 @@
                         <span class="particle-dot"></span>
                     </a>
                     
-
                 </div>
             </div>
         </div>
@@ -195,7 +219,6 @@
     <main class="flex-grow flex flex-col items-center justify-center z-10 px-4 -mt-10">
         
         <!-- PAMA Logo -->
-        <!-- Using the requested local file name, applying inversion so it's visible on dark background -->
         <img 
             src="Images/Final_PAMA_Logo.png" 
             alt="PAMA Logo" 
@@ -246,5 +269,31 @@
 
     </footer>
 
+    <!-- Script to dynamically generate subtle floating particles -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const bg = document.querySelector('.space-bg');
+            const particleCount = 40; // Keeps the effect subtle
+            
+            for (let i = 0; i < particleCount; i++) {
+                let particle = document.createElement('div');
+                particle.classList.add('floating-particle');
+                
+                // Randomize sizes, start positions, and speeds for a natural parallax effect
+                let size = Math.random() * 2 + 1; // Between 1px and 3px
+                let posX = Math.random() * 100; // Anywhere from 0vw to 100vw
+                let duration = Math.random() * 15 + 15; // Animation takes 15s to 30s to float up
+                let delay = Math.random() * 20; // Stagger start times so they don't spawn all at once
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}vw`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `-${delay}s`; // Negative delay means they already exist on page load
+                
+                bg.appendChild(particle);
+            }
+        });
+    </script>
 </body>
 </html>
