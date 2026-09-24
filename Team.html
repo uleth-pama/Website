@@ -1,2 +1,281 @@
+
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAMA - Teams</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Google Fonts (Inter for a clean, modern look) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Load FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Ensures strict 1-page no-scroll layout */
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: #050814; /* Deep space fallback color */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Space Background using an external high-res image with an overlay */
+        .space-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
+                url('Images/space_background.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        /* CSS Filter to make the provided black logo white to contrast against space background */
+        .logo-invert {
+            filter: brightness(0) invert(1);
+            /* Smooth scaling */
+            transition: transform 0.3s ease;
+        }
+
+        /* Custom utilities for the layout aesthetics */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            transition: opacity 0.2s ease;
+        }
+        .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .dropdown-content {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .menu-active .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Initial drop-down state of the particles */
+        .particle-item {
+            transform: translateY(-15px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        /* Staggered dropping effect when MENU is clicked and active */
+        .menu-active .particle-item {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .menu-active .particle-item:nth-child(1) { transition-delay: 0.05s; }
+        .menu-active .particle-item:nth-child(2) { transition-delay: 0.1s; }
+
+        /* The dot itself */
+        .particle-dot {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7);
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            flex-shrink: 0;
+        }
+
+        .particle-item:hover {
+            opacity: 0.8;
+        }
+
+        /* The hidden text that acts like a Manim drawing */
+        .particle-text {
+            display: inline-block;
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            /* Snappy ease-out curve mimicking Manim's math reveals */
+            transition: max-width 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+                        opacity 0.4s ease,
+                        transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+                        color 0.2s ease;
+            transform: translateX(10px);
+            transform-origin: right center;
+        }
+
+        /* INSTANT MANIM ANIMATION: Text reveals itself automatically after dropping */
+        .menu-active .particle-item:nth-child(1) .particle-text { transition-delay: 0.15s; }
+        .menu-active .particle-item:nth-child(2) .particle-text { transition-delay: 0.25s; }
+
+        .menu-active .particle-text {
+            max-width: 120px; /* Expands to reveal the word */
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* The dot intensifies when hovered */
+        .particle-item:hover .particle-dot {
+            transform: scale(1.5);
+            box-shadow: 0 0 16px 4px rgba(255, 255, 255, 1);
+        }
+
+        /* Text color softens on hover to indicate it's a clickable link */
+        .particle-item:hover .particle-text {
+            color: #d1d5db;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between">
+
+    <div class="space-bg"></div>
+
+    <header class="w-full flex justify-between items-center p-6 md:p-10 z-10">
+        
+        <!-- Top Left: Social Media Icons -->
+        <div class="flex items-center gap-6 text-sm text-gray-300">
+            <a href="#" class="nav-link"><i class="fab fa-instagram text-lg"></i></a>
+            <a href="#" class="nav-link"><i class="fab fa-facebook-f text-lg"></i></a>
+            <a href="#" class="nav-link"><i class="far fa-envelope text-lg"></i></a>
+        </div>
+
+        <!-- Top Center: Join Now Icon/Button -->
+        <!-- Replacing the original "Book Now" or logo overlay with a prominent join button -->
+        <div class="absolute left-1/2 transform -translate-x-1/2">
+            <a href="#" class="nav-link flex items-center justify-center border border-white/30 rounded-full px-6 py-2 text-xs uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300">
+                Join Now
+            </a>
+        </div>
+
+        <!-- Top Right: Language and Menu -->
+        <div class="flex items-center gap-8 text-xs font-medium uppercase tracking-[0.15em] text-gray-300">
+            <div class="flex gap-1">
+                <a href="#" class="text-white">EN</a>
+                <span>/</span>
+                <a href="#" class="nav-link">FR</a>
+            </div>
+            
+            <div id="menu-container" class="relative">
+                <!-- Added onclick event to trigger JavaScript toggle -->
+                <button onclick="toggleMenu(event)" class="nav-link flex items-center gap-3 py-2 cursor-pointer">
+                    MENU
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                
+                <!-- Removed group-hover classes, using dropdown-content controlled by JS -->
+                <div class="dropdown-content absolute right-0 top-full pt-4 pb-6 pl-20 pr-2 flex flex-col items-end gap-6 z-50">
+                    
+                    <!-- Particle 1 -->
+                    <a href="Team.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full ">
+                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">TEAM</span>
+                        <span class="particle-dot"></span>
+                    </a>
+
+                    <!-- Particle 2 -->
+                    <a href="Events.html" class="particle-item flex items-center justify-end gap-4 cursor-pointer w-full">
+                        <span class="particle-text text-white text-xs font-medium uppercase tracking-[0.25em]">EVENTS</span>
+                        <span class="particle-dot"></span>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center justify-center z-10 px-4 -mt-10">
+        
+        <!-- PAMA Logo -->
+        <!-- Using the requested local file name, applying inversion so it's visible on dark background -->
+        <img 
+            src="Images/Final_PAMA_Logo.png" 
+            alt="PAMA Logo" 
+            class="logo-invert w-[70vw] max-w-[800px] object-contain mb-6"
+        >
+        
+        <!-- Full Name Subtitle -->
+        <h1 class="text-center text-xs md:text-sm uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-300 font-light max-w-4xl px-4">
+            Physics, Astronomy, & Mathematics Association
+        </h1>
+    </main>
+
+    <footer class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 p-6 md:p-10 z-10 items-end">
+        
+        <!-- Column 1: Image Card replacing the plane card -->
+        <div class="glass-card flex items-stretch rounded-xl overflow-hidden h-[120px] max-w-sm">
+            <!-- Thumbnail Image -->
+            <div class="w-2/5 h-full relative">
+                <img 
+                    src="image_208297.jpg" 
+                    alt="PAMA Event" 
+                    class="w-full h-full object-cover"
+                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?q=80&w=400&auto=format&fit=crop';"
+                >
+            </div>
+            <!-- Card Text Content -->
+            <div class="w-3/5 p-4 flex flex-col justify-between">
+                <p class="text-[10px] md:text-xs text-gray-200 leading-snug font-medium">
+                    Cosmic Cinema is back. Join us under the stars...
+                </p>
+                <a href="#" class="text-[10px] md:text-xs font-semibold hover:text-gray-300 transition-colors flex items-center gap-2 uppercase tracking-wide">
+                    News overview <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Column 2: Mission Paragraph -->
+        <div class="hidden md:block text-xs text-gray-300 leading-relaxed font-light mb-2">
+            The Physics, Astronomy, & Mathematics Association (PAMA) is a non-profit student organization and modern successor to the historic Physics Club. We aim to equip students with the necessary skills and resources to succeed as future scientists.
+        </div>
+
+        <!-- Column 3: Community Paragraph & Call to Action -->
+        <div class="hidden md:block text-xs text-gray-300 leading-relaxed font-light mb-2">
+            <p class="mb-4">
+                PAMA serves all full-time and part-time university students, faculty, staff, and local community members. We foster a safe, inclusive environment for students to learn and grow.
+            </p>
+            <a href="#" class="text-white font-semibold hover:text-gray-300 transition-colors flex items-center gap-2 uppercase tracking-wide">
+                Learn more about our club <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </footer>
+
+    <script>
+        function toggleMenu(event) {
+            // Prevent the click from immediately bubbling up to the window
+            event.stopPropagation();
+            const container = document.getElementById('menu-container');
+            container.classList.toggle('menu-active');
+        }
+
+        // Close the menu if the user clicks anywhere else on the screen
+        window.onclick = function(event) {
+            const container = document.getElementById('menu-container');
+            // Ensure clicking the links inside the menu doesn't instantly close it and kill the navigation
+            if (container && container.classList.contains('menu-active') && !container.contains(event.target)) {
+                container.classList.remove('menu-active');
+            }
+        }
+    </script>
+</body>
+</html>
